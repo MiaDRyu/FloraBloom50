@@ -6,5 +6,5 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 const app = createApp(App)
 
-app.use(router) // Dile a Vue que use el router
-app.mount('#app') // Monta todo en el div con id="app" de tu index.html
+app.use(router) 
+app.mount('#app') 
