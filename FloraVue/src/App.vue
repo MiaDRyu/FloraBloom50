@@ -6,10 +6,6 @@
       </transition>
     </router-view>
   </div>
-
-  <footer v-if="$route.path !== '/'" class="footer-global">
-    <p>&copy; 2026 FloraBloom - Tu Vivero Digital</p>
-  </footer>
 </template>
 
 <script setup>

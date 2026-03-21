@@ -1,8 +1,8 @@
 <template>
-  <div class="catalogo-container">
-    <header class="main-header d-flex align-items-center justify-content-center py-3">
+  <div class="catalogo-container min-vh-100">
+    <header class="main-header bg-primary d-flex align-items-center justify-content-center py-3">
       <img src="@/assets/img/logo.jpeg" alt="Logo" class="logo-mini me-3">
-      <h1 class="m-0">FloraBloom</h1>
+      <h1 class="m-0 text-white">FloraBloom</h1>
     </header>
 
     <section class="filters-section container mt-4">
@@ -34,10 +34,10 @@
             <img :src="obtenerRutaImagen(flor.imagen_url)" class="card-img-top" :alt="flor.nombre">
             <div class="card-body d-flex flex-column">
               <h5 class="card-title">{{ flor.nombre }}</h5>
-              <p class="card-text text-muted flex-grow-1">{{ flor.significado }}</p>
+              <p class="card-text flex-grow-1">{{ flor.significado }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <span class="badge bg-secondary">{{ flor.categoria }}</span>
-                <span class="fw-bold text-primary">${{ flor.precio }}</span>
+                <span class="fw-bold text-white">${{ flor.precio }}</span>
               </div>
             </div>
           </div>
@@ -89,7 +89,7 @@ const abrirDetalles = (flor) => {
 
 <style lang="scss" scoped>
 .main-header {
-  background-color: var(--bs-secondary); // Usa tu variable de Sass
+  background-color: var(--bs-secondary);
   .logo-mini {
     height: 50px;
     border-radius: 50%;
@@ -97,6 +97,8 @@ const abrirDetalles = (flor) => {
 }
 
 .card {
+  background-color: #76191F;
+  color: aliceblue;
   cursor: pointer;
   transition: transform 0.2s ease;
   &:hover {
@@ -106,5 +108,9 @@ const abrirDetalles = (flor) => {
     height: 200px;
     object-fit: cover;
   }
+}
+
+.catalogo-container {
+  background-color: #F5D9D5;
 }
 </style>

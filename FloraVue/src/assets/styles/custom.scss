@@ -3,3 +3,18 @@ $primary: #76191F;
 $font-family-base: 'Merriweather', system-ui, sans-serif;
 
 @import "bootstrap/scss/bootstrap";
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #F5D9D5 !important; // Fuerza el color rosa en toda la base
+  min-height: 100%; 
+  display: flex;
+  flex-direction: column;
+}
+
+#app {
+  background-color: #F5D9D5;
+  min-height: 100vh; // Asegura que el contenedor de Vue ocupe al menos la pantalla
+  flex: 1;
+}

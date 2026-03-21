@@ -22,17 +22,16 @@
         isExiting.value = true;
         setTimeout(() => {
             router.push('/catalogo');
-        }, 800);
+        }, 50);
     };
 </script>
 
 <style scoped>
 #main_content {
     background-color: #F5D9D5;
-    transition: transform 0.8s ease, opacity 0.8 ease;
+    transition: opacity 0.8s ease;
 }
 .slide-up {
-    transform: translateY(-100%);
     opacity: 0;
 }
 #main_logo{
