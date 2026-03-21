@@ -21,7 +21,7 @@
     const handleEnter = () => {
         isExiting.value = true;
         setTimeout(() => {
-            router.push('/home');
+            router.push('/catalogo');
         }, 800);
     };
 </script>

@@ -1,89 +1,110 @@
 <template>
-  <header id="main_header">
-    <div class="container h-100 d-flex align-items-center justify-content-center">
-      <img src="@/assets/img/logo.jpeg" alt="Logo" id="logo">
+  <div class="catalogo-container">
+    <header class="main-header d-flex align-items-center justify-content-center py-3">
+      <img src="@/assets/img/logo.jpeg" alt="Logo" class="logo-mini me-3">
       <h1 class="m-0">FloraBloom</h1>
-    </div>
-  </header>
+    </header>
 
-  <div class="container-fluid px-0" id="carousel_container">
-    <div id="flowerCarousel" class="carousel slide h-100" data-bs-ride="carousel">
-      <div class="carousel-inner h-100">
-        <div class="carousel-item active h-100">
-          <img src="@/assets/img/tulips.png" class="d-block w-100 h-100 object-fit-cover" alt="Tulips 1">
-        </div>
-        <div class="carousel-item h-100">
-          <img src="@/assets/img/tulips2.webp" class="d-block w-100 h-100 object-fit-cover" alt="Tulips 2">
-        </div>
+    <section class="filters-section container mt-4">
+      <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <button 
+          v-for="cat in categorias" 
+          :key="cat"
+          @click="categoriaSeleccionada = cat"
+          :class="['btn', categoriaSeleccionada === cat ? 'btn-primary' : 'btn-outline-primary']"
+        >
+          {{ cat }}
+        </button>
       </div>
-      </div>
-  </div>
+    </section>
 
-  <main class="container-fluid px-0 justify-content-center" id="main_content_home">
-    <div class="row px-4 py-4">
-      <div v-for="flor in listaFlores" :key="flor.id" class="col-md-3 mb-4">
-        <div class="card h-100" @click="verDetalles(flor)">
-          <img :src="flor.imagen_url" class="card-img-top" :alt="flor.nombre">
-          <div class="card-body">
-            <h5 class="card-title">{{ flor.nombre }}</h5>
-            <p class="card-text text-muted">{{ flor.significado }}</p>
-            <p class="fw-bold">${{ flor.precio }}</p>
+    <main class="container my-5">
+      <div v-if="cargando" class="text-center">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p>Cargando flores...</p>
+      </div>
+
+      <div v-else class="row">
+        <div 
+          v-for="flor in floresFiltradas" 
+          :key="flor.id" 
+          class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"
+        >
+          <div class="card h-100 shadow-sm" @click="abrirDetalles(flor)">
+            <img :src="obtenerRutaImagen(flor.imagen_url)" class="card-img-top" :alt="flor.nombre">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">{{ flor.nombre }}</h5>
+              <p class="card-text text-muted flex-grow-1">{{ flor.significado }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="badge bg-secondary">{{ flor.categoria }}</span>
+                <span class="fw-bold text-primary">${{ flor.precio }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </main>
 
-  <div v-if="florSeleccionada" class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5)">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{ florSeleccionada.nombre }}</h5>
-          <button type="button" class="btn-close" @click="florSeleccionada = null"></button>
-        </div>
-        <div class="modal-body text-center">
-          <img :src="florSeleccionada.imagen_url" class="img-fluid mb-3 rounded" id="flowerModalImage">
-          <p>{{ florSeleccionada.descripcion }}</p>
-          <ul class="list-group text-start">
-            <li class="list-group-item">☀️ <strong>Luz Solar:</strong> {{ florSeleccionada.luz_solar }}</li>
-            <li class="list-group-item">💧 <strong>Riego:</strong> {{ florSeleccionada.frecuencia_riego }}</li>
-            <li class="list-group-item">🐾 <strong>Mascotas:</strong> {{ florSeleccionada.toxicidad ? 'Tóxica' : 'Segura' }}</li>
-          </ul>
-        </div>
+      <div v-if="floresFiltradas.length === 0 && !cargando" class="text-center mt-5">
+        <p class="h4 text-muted">No encontramos plantas en esta categoría.</p>
       </div>
+    </main>
+
     </div>
-  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { ref, onMounted, computed } from 'vue';
+import { getFlores } from '../services/FloreriaService';
 
 const listaFlores = ref([]);
-const florSeleccionada = ref(null);
+const cargando = ref(true);
+const categoriaSeleccionada = ref('Todas');
+const categorias = ['Todas', 'Interior', 'Exterior', 'Suculentas', 'Orquídeas'];
 
-const cargarFlores = async () => {
+onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:3000/flores', {
-      headers: { 'auth': 'A1B2C3' }
-    });
-    listaFlores.value = response.data;
+    const datos = await getFlores();
+    listaFlores.value = datos;
   } catch (error) {
-    console.error("Error al conectar con la API:", error);
+    console.error("Error al cargar el catálogo:", error);
+  } finally {
+    cargando.value = false;
   }
+});
+
+const floresFiltradas = computed(() => {
+  if (categoriaSeleccionada.value === 'Todas') return listaFlores.value;
+  return listaFlores.value.filter(f => f.categoria === categoriaSeleccionada.value);
+});
+
+const obtenerRutaImagen = (nombreImagen) => {
+  if (!nombreImagen) return 'https://via.placeholder.com/150';
+  return new URL(`../assets/img/${nombreImagen}`, import.meta.url).href;
 };
 
-const verDetalles = (flor) => {
-  florSeleccionada.ref = flor;
+const abrirDetalles = (flor) => {
+  console.log("Ver detalles de:", flor.nombre);
 };
-
-onMounted(cargarFlores);
 </script>
 
-<style scoped>
-/* Heredamos tus estilos de style.css */
-#main_header { height: 20vh; background-color: #F5D9D5; color: #4f0022; }
-.card { background-color: #F5D9D5; border-radius: 14px; cursor: pointer; }
-.card:hover { transform: translateY(-6px); box-shadow: 0px 12px 25px rgba(91, 0, 39, 0.25); }
-#main_content_home { background-color: #F5D9D5; }
+<style lang="scss" scoped>
+.main-header {
+  background-color: var(--bs-secondary); // Usa tu variable de Sass
+  .logo-mini {
+    height: 50px;
+    border-radius: 50%;
+  }
+}
+
+.card {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  &:hover {
+    transform: scale(1.03);
+  }
+  img {
+    height: 200px;
+    object-fit: cover;
+  }
+}
 </style>
