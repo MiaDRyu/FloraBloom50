@@ -27,12 +27,6 @@ db.connect(err => {
     console.log('Conectando a Mysql');
 })
 
-/*var json = [
-    {nombre:"mayelo", edad:23, calificaciones: [5,9,10,8]},
-    {nombre:"Mia", edad:20, calificaciones: [8,9,10,8]},
-    {nombre:"Vanessa", edad:19, calificaciones: [10,9,10,10]},
-]*/
-
 const Middleware = (req,res,next) => {
 
     var pass = req.headers['auth'];
@@ -58,9 +52,6 @@ app.get('/flores', Middleware, (req, res) => {
         res.json(results);
     });
 });
-
-// El GET '/' que ya tienes podrías dejarlo como un saludo de la API
-app.get('/', (req, res) => res.send("API de FloraBloom operando"));
 
 app.post("/flores", Middleware, (req, res) => {
     const{nombre, significado} = req.body;

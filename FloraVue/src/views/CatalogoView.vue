@@ -44,6 +44,11 @@
         </div>
       </div>
 
+       <FlorModal 
+      :flor="florSeleccionada" 
+      @cerrar="florSeleccionada = null" 
+      />
+
       <div v-if="floresFiltradas.length === 0 && !cargando" class="text-center mt-5">
         <p class="h4 text-muted">No encontramos plantas en esta categoría.</p>
       </div>
@@ -55,6 +60,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { getFlores } from '../services/FloreriaService';
+import  FlorModal  from '../components/FlorModal.vue';
 
 const listaFlores = ref([]);
 const cargando = ref(true);
@@ -83,7 +89,7 @@ const obtenerRutaImagen = (nombreImagen) => {
 };
 
 const abrirDetalles = (flor) => {
-  console.log("Ver detalles de:", flor.nombre);
+  florSeleccionada.value = flor;
 };
 </script>
 
