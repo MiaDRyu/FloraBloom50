@@ -8,7 +8,7 @@
           <button type="button" class="btn-close btn-close-white" @click="$emit('cerrar')"></button>
         </div>
 
-        <div class="modal-body p-4">
+        <div class="modal-body p-4 bg-secondary">
           <div class="row">
             <div class="col-md-5 text-center">
               <img :src="imagenRuta" class="img-fluid rounded shadow-sm" style="max-height: 300px; object-fit: cover;">
@@ -23,11 +23,11 @@
             <div class="col-md-7">
               <h6 class="text-primary fw-bold">Guía de Cuidados</h6>
               <div class="row g-2">
-                <div class="col-6 border rounded p-2 bg-light">
+                <div class="col-6 border rounded p-2 bg-primary text-white">
                   <small class="d-block fw-lighter">LUZ</small>
                   <span>{{ flor.luz_solar }}</span>
                 </div>
-                <div class="col-6 border rounded p-2 bg-light">
+                <div class="col-6 border rounded p-2 bg-primary text-white">
                   <small class="d-block fw-lighter">RIEGO</small>
                   <span>{{ flor.frecuencia_riego }}</span>
                 </div>
@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <div class="modal-footer border-0">
+        <div class="modal-footer border-0 bg-secondary">
           <h4 class="text-primary me-auto">${{ flor.precio }}</h4>
           <button type="button" class="btn btn-primary" @click="$emit('cerrar')">Cerrar</button>
         </div>
