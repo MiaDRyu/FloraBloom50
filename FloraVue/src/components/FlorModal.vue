@@ -57,6 +57,6 @@ defineEmits(['cerrar']);
 
 const imagenRuta = computed(() => {
   if (!props.flor?.imagen_url) return 'https://via.placeholder.com/150';
-  return new URL(`../assets/img/${props.flor.imagen_url}`, import.meta.url).href;
+  return props.flor.imagen_url;
 });
 </script>

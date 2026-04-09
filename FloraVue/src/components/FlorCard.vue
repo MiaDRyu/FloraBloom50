@@ -1,5 +1,5 @@
 <template>
-    <div class="card h-100 shadow-sm" @click="$emit('abrirModal')">
+    <div class="card h-100 shadow-sm bg-primary text-white" @click="$emit('abrirModal')">
             <img :src="imagenRuta" class="card-img-top" :alt="flor.nombre">
             <div class="card-body d-flex flex-column">
               <h5 class="card-title">{{ flor.nombre }}</h5>
@@ -26,14 +26,12 @@ defineEmits(['abrirModal']);
 
 const imagenRuta = computed(() => {
   if (!props.flor?.imagen_url) return 'https://via.placeholder.com/150';
-  return new URL(`../assets/img/${props.flor.imagen_url}`, import.meta.url).href;
+  return props.flor.imagen_url;
 });
 </script>
 
 <style>
 .card {
-  background-color: #76191F;
-  color: aliceblue;
   cursor: pointer;
   transition: transform 0.2s ease;
   &:hover {

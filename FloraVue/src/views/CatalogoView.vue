@@ -14,7 +14,7 @@
 
       <div v-else class="row">
         <div 
-          v-for="flor in floresFiltradas" 
+          v-for="flor in floresPaginadas" 
           :key="flor.id" 
           class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"
         >
@@ -29,6 +29,12 @@
       :flor="florSeleccionada" 
       @cerrar="florSeleccionada = null" 
       />
+
+      <Paginacion 
+      :totalItems="floresFiltradas.length" 
+      :paginaActual="paginaActual"
+      @cambiarPagina="(p) => paginaActual = p"
+    />
 
       <div v-if="floresFiltradas.length === 0 && !cargando" class="text-center mt-5">
         <p class="h4 text-muted">No encontramos plantas en esta categoría.</p>
@@ -45,11 +51,14 @@ import  FlorModal  from '../components/FlorModal.vue';
 import FlorCard from '../components/FlorCard.vue';
 import Header from '../components/Header.vue';
 import Categorias from '../components/Categorias.vue';
+import Paginacion from '../components/Paginacion.vue';
 
 const listaFlores = ref([]);
 const florSeleccionada =ref(null);
 const cargando = ref(true);
 const categoriaSeleccionada = ref('Todas');
+const paginaActual = ref(1); 
+const floresPorPagina = 15;   
 
 onMounted(async () => {
   try {
@@ -62,14 +71,22 @@ onMounted(async () => {
   }
 });
 
-const actualizarCategoria = (nuevaCat) => {
-  categoriaSeleccionada.value = nuevaCat;
-};
-
 const floresFiltradas = computed(() => {
   if (categoriaSeleccionada.value === 'Todas') return listaFlores.value;
   return listaFlores.value.filter(f => f.categoria === categoriaSeleccionada.value);
 });
+
+const floresPaginadas = computed(() => {
+  const inicio = (paginaActual.value - 1) * floresPorPagina;
+  const fin = inicio + floresPorPagina;
+
+  return floresFiltradas.value.slice(inicio, fin);
+});
+
+const actualizarCategoria = (nuevaCat) => {
+  categoriaSeleccionada.value = nuevaCat;
+  paginaActual.value = 1; 
+};
 
 const abrirDetalles = (flor) => {
   florSeleccionada.value = flor;
