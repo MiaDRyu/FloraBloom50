@@ -4,6 +4,7 @@ const cors = require('cors');
 const mysql = require('mysql2');
 
 const app = express();
+const PORT = 3000;
 
 app.use(cors({
     origin: '*',
@@ -73,6 +74,6 @@ app.post("/flores", Middleware, (req, res) => {
     )
 })
 
-app.listen(process.env.DB_PORT, ()=>{
-    console.log("La Api escucha en el puerto: "+ process.env.DB_PORT);
+app.listen(PORT, ()=>{
+    console.log("La Api escucha en el puerto: "+ PORT);
 })
