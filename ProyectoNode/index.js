@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require ('express');
 const cors = require('cors');
 const mysql = require('mysql2');
+
 const app = express();
 const PORT = 3000;
 
@@ -13,10 +15,10 @@ app.use(cors({
 app.use(express.json());
 
 const db = mysql.createConnection({
-    host: '127.0.0.1',
-    user: 'root',
-    password: 'MiaSQL123*',
-    database: 'floreria'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME
 });
 
 db.connect(err => {
@@ -27,12 +29,9 @@ db.connect(err => {
     console.log('Conectando a Mysql');
 })
 
-const Middleware = (req,res,next) => {
-
-    var pass = req.headers['auth'];
-    const clave = "A1B2C3";
-    
-    if(pass === clave){
+const Middleware = (req, res, next) => {
+    const pass = req.headers['auth'];
+    if (pass === process.env.API_AUTH_KEY) {
         next();
     } else {
         res.status(401).json("Usuario no autorizado");
