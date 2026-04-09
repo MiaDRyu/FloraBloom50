@@ -4,7 +4,6 @@ const cors = require('cors');
 const mysql = require('mysql2');
 
 const app = express();
-const PORT = 3000;
 
 app.use(cors({
     origin: '*',
@@ -19,6 +18,10 @@ const db = mysql.createConnection({
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME
+    port: process.env.DB_PORT || 23492, 
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
 db.connect(err => {
