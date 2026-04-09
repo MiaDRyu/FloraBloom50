@@ -73,6 +73,6 @@ app.post("/flores", Middleware, (req, res) => {
     )
 })
 
-app.listen(PORT, ()=>{
-    console.log("La Api escucha en el puerto: "+ PORT);
+app.listen(process.env.DB_PORT, ()=>{
+    console.log("La Api escucha en el puerto: "+ process.env.DB_PORT);
 })
