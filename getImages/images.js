@@ -6,28 +6,27 @@ const API_KEY = process.env.PEXELS_API_KEY;
 
 async function main() {
     const connection = await mysql.createConnection({
-        host: '127.0.0.1',
-        user: 'root',
-        password: 'MiaSQL123*',
-        database: 'floreria'
+        host: process.env.DB_HOST,      
+        user: process.env.DB_USER,      
+        password: process.env.DB_PASS,  
+        database: process.env.DB_NAME,  
+        port: process.env.DB_PORT || 23492,
+        ssl: {
+            rejectUnauthorized: false  
+        }
     });
 
-    console.log("✅ Conectado a MySQL");
+    console.log("✅ Conectado exitosamente a la base de datos de AIVEN");
 
     const [flores] = await connection.execute("SELECT id, nombre FROM flores");
 
     for (let flor of flores) {
         try {
-            const query = flor.nombre + " flower";
+            const searchQuery = flor.nombre;
 
             const response = await axios.get('https://api.pexels.com/v1/search', {
-                headers: {
-                    Authorization: API_KEY
-                },
-                params: {
-                    query: query,
-                    per_page: 1
-                }
+                headers: { Authorization: API_KEY },
+                params: { query: searchQuery, per_page: 1 }
             });
 
             if (response.data.photos.length > 0) {
@@ -38,18 +37,19 @@ async function main() {
                     [imageUrl, flor.id]
                 );
 
-                console.log(`${flor.nombre} → OK`);
+                console.log(`🌸 ${flor.nombre} → Actualizada con éxito`);
             } else {
-                console.log(`${flor.nombre} → sin imagen`);
+                console.log(`⚠️ ${flor.nombre} → No se encontró imagen en Pexels`);
             }
 
+            await new Promise(resolve => setTimeout(resolve, 200)); 
+
         } catch (error) {
-            console.log(`Error con ${flor.nombre}`, error.message);
+            console.log(`❌ Error con ${flor.nombre}:`, error.message);
         }
     }
 
     await connection.end();
-    console.log("Proceso terminado");
 }
 
 main();
